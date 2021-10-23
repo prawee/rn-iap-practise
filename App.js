@@ -37,29 +37,36 @@ export default function App() {
       'receipt-data': receipt,
       password: '200749475c574baaace440f831e48469',
     };
-    const result = await IAP.validateReceiptIos(receiptBody, true)
-      .catch()
-      .then(receiptValidate => {
-        try {
-          // console.log(receiptValidate);
-          const renewalHistory = receiptValidate.latest_receipt_info;
-          // console.log('renewWalHistory ', renewWalHistory);
-          const expiration =
-            renewalHistory[renewalHistory.length - 1].expires_date_ms;
-          let expired = Date.new() > expiration;
-          if (!expired) {
-            setPurchased(true);
-          } else {
-            Alert.alert(
-              'Purchase Expired',
-              'Your subscription has expired, please resubscribe to continue using app',
-            );
-          }
-          setChecking(false);
-        } catch (error) {
-          console.log('validateReceiptIos failed.');
-        }
-      });
+
+    const urlFirebase = 'https://us-central1-receiptvalidation-caa5a.cloudfunctions.net/validateIOS';
+    const deliveryReceipt = await fetch(urlFirebase, {
+      headers: {'Content-Type': 'application/json', method: 'POST'},
+      body: JSON.stringify({data: receiptBody}),
+    });
+
+    // const result = await IAP.validateReceiptIos(receiptBody, true)
+    //   .catch()
+    //   .then(receiptValidate => {
+    //     try {
+    //       // console.log(receiptValidate);
+    //       const renewalHistory = receiptValidate.latest_receipt_info;
+    //       // console.log('renewWalHistory ', renewWalHistory);
+    //       const expiration =
+    //         renewalHistory[renewalHistory.length - 1].expires_date_ms;
+    //       let expired = Date.new() > expiration;
+    //       if (!expired) {
+    //         setPurchased(true);
+    //       } else {
+    //         Alert.alert(
+    //           'Purchase Expired',
+    //           'Your subscription has expired, please resubscribe to continue using app',
+    //         );
+    //       }
+    //       setChecking(false);
+    //     } catch (error) {
+    //       console.log('validateReceiptIos failed.');
+    //     }
+    //   });
   };
 
   useEffect(() => {
