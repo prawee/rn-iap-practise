@@ -8,11 +8,11 @@ const functions = require("firebase-functions");
 //   response.send({hello: "hello", you: request.query.text});
 // });
 
-exports.validateIOS = functions.https.onCall(async(d) => {
-    const data = JSON.stringify({
-        'receipt-data': d.receipt_data,
-        'password': d.password,
-        'exclude-old-transactions': true
-    })
-    console.log(data)
-})
+exports.validateIOS = functions.https.onCall((d)=> {
+  const data = JSON.stringify({
+    "receipt-data": d["receipt-data"],
+    "password": d.password,
+    "exclude-old-transactions": true,
+  });
+  console.log(data);
+});
